@@ -38,11 +38,17 @@ def main():
         
     elif args.mode == "eval":
         print("评估模型性能...")
-        evaluate_model(args.model)
+        # 如果未指定模型，使用默认的已训练模型
+        if args.model is None:
+            model_path = os.path.join(os.path.abspath('.'), 'runs/SKU110K_detection041701/weights/best.pt')
+        else:
+            model_path = args.model
+            
+        evaluate_model(model_path)
         
         if args.viz:
             print(f"可视化 {args.samples} 个预测结果...")
-            visualize_predictions(args.model, args.samples)
+            visualize_predictions(model_path, args.samples)
             
     elif args.mode == "predict":
         print("使用模型进行预测...")

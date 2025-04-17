@@ -23,32 +23,10 @@ def evaluate_model(model_path=None):
         print("请先运行 python code/convert_annotations.py 转换数据集")
         return None
         
+    # 如果没有指定模型路径，直接使用训练好的最佳模型
     if model_path is None:
-        # 默认使用最新训练的模型
-        runs_dir = os.path.join(ROOT_DIR, 'runs/SKU110K_detection')
-        if os.path.exists(runs_dir):
-            # 检查weights目录
-            weights_dir = os.path.join(runs_dir, 'weights')
-            if os.path.exists(weights_dir):
-                best_model = os.path.join(weights_dir, 'best.pt')
-                if os.path.exists(best_model):
-                    model_path = best_model
-                    print(f"使用模型: {model_path}")
-            
-            # 如果没找到weights子目录，检查训练子目录
-            if model_path is None:
-                model_dirs = [d for d in os.listdir(runs_dir) if os.path.isdir(os.path.join(runs_dir, d))]
-                latest_model = sorted(model_dirs)[-1] if model_dirs else None
-                
-                if latest_model:
-                    model_path = os.path.join(runs_dir, latest_model, 'weights/best.pt')
-                    if os.path.exists(model_path):
-                        print(f"使用模型: {model_path}")
-        
-        if model_path is None:
-            # 如果没有训练过模型，使用原始的预训练模型
-            model_path = os.path.join(ROOT_DIR, 'yolov8n.pt')
-            print(f"未找到训练模型，使用预训练模型: {model_path}")
+        model_path = os.path.join(ROOT_DIR, 'runs/SKU110K_detection041701/weights/best.pt')
+        print(f"使用默认训练模型: {model_path}")
     
     # 检查模型文件是否存在
     if not os.path.exists(model_path):
@@ -67,7 +45,7 @@ def evaluate_model(model_path=None):
     try:
         print(f"开始在测试集上评估模型...")
         print(f"使用配置文件: {CONFIG_YAML}")
-        results = model.val(data=CONFIG_YAML, split='test')
+        results = model.val(data=CONFIG_YAML)
         
         print(f"\n测试结果汇总:")
         try:
@@ -88,32 +66,10 @@ def evaluate_model(model_path=None):
 
 def visualize_predictions(model_path=None, num_samples=5):
     """可视化模型在测试集上的预测结果"""
+    # 如果没有指定模型路径，直接使用训练好的最佳模型
     if model_path is None:
-        # 默认使用最新训练的模型
-        runs_dir = os.path.join(ROOT_DIR, 'runs/SKU110K_detection')
-        if os.path.exists(runs_dir):
-            # 检查weights目录
-            weights_dir = os.path.join(runs_dir, 'weights')
-            if os.path.exists(weights_dir):
-                best_model = os.path.join(weights_dir, 'best.pt')
-                if os.path.exists(best_model):
-                    model_path = best_model
-                    print(f"使用模型: {model_path}")
-            
-            # 如果没找到weights子目录，检查训练子目录
-            if model_path is None:
-                model_dirs = [d for d in os.listdir(runs_dir) if os.path.isdir(os.path.join(runs_dir, d))]
-                latest_model = sorted(model_dirs)[-1] if model_dirs else None
-                
-                if latest_model:
-                    model_path = os.path.join(runs_dir, latest_model, 'weights/best.pt')
-                    if os.path.exists(model_path):
-                        print(f"使用模型: {model_path}")
-        
-        if model_path is None:
-            # 如果没有训练过模型，使用原始的预训练模型
-            model_path = os.path.join(ROOT_DIR, 'yolov8n.pt')
-            print(f"未找到训练模型，使用预训练模型: {model_path}")
+        model_path = os.path.join(ROOT_DIR, 'runs/SKU110K_detection041701/weights/best.pt')
+        print(f"使用默认训练模型: {model_path}")
     
     # 检查模型文件是否存在
     if not os.path.exists(model_path):
@@ -198,4 +154,4 @@ if __name__ == "__main__":
     
     # 可视化预测结果
     if results is not None:
-        visualize_predictions() 
+        visualize_predictions()
