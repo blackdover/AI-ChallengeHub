@@ -11,7 +11,6 @@
 | **main.py**     | 系统入口点，统一的命令行界面，支持训练、评估和预测模式 |
 | **train.py**    | 模型训练模块，包含训练流程和超参数设置                 |
 | **evaluate.py** | 模型评估模块，计算性能指标和可视化预测结果             |
-| **predict.py**  | 预测模块，支持图像、视频和摄像头实时推理               |
 
 ### 工具脚本
 
@@ -48,26 +47,6 @@ python main.py eval --viz --samples 10
 # 指定模型路径
 python main.py eval --model ../runs/SKU110K_detection041701/weights/best.pt
 ```
-
-**预测模式**:
-
-```bash
-# 使用摄像头
-python main.py predict
-
-# 使用图像
-python main.py predict --source path/to/image.jpg --save
-
-# 使用视频
-python main.py predict --source path/to/video.mp4 --save
-
-# 设置置信度阈值
-python main.py predict --source path/to/image.jpg --conf 0.4 --save
-
-# 设置NMS IOU阈值
-python main.py predict --source path/to/image.jpg --iou 0.5 --save
-```
-
 ### 2. 训练模块 (train.py)
 
 训练模块使用 YOLOv8 API 进行模型训练，主要特点：
@@ -91,15 +70,7 @@ python main.py predict --source path/to/image.jpg --iou 0.5 --save
 - 生成混淆矩阵和 PR 曲线
 - 可视化预测结果
 
-### 4. 预测模块 (predict.py)
-
-预测模块支持对单张图像、视频和摄像头的实时推理：
-
-- 支持多种输入源
-- 可调整的置信度和 NMS 阈值
-- 结果可视化和保存功能
-
-### 5. 数据转换工具 (convert_annotations.py)
+### 4. 数据转换工具 (convert_annotations.py)
 
 将 SKU110K 数据集的原始标注格式(CSV)转换为 YOLO 格式：
 
@@ -107,27 +78,10 @@ python main.py predict --source path/to/image.jpg --iou 0.5 --save
 - 生成 YOLO 格式所需的 data.yaml 配置文件
 - 创建适合训练的目录结构
 
-### 6. 数据集修复工具 (fix_dataset.py)
+### 5. 数据集修复工具 (fix_dataset.py)
 
 修复数据集结构问题，确保图像和标签的正确对应：
 
 - 标准化目录结构
 - 检查并修复标签文件与图像文件的对应关系
 - 更新 data.yaml 配置文件
-
-## 自定义开发
-
-如需进一步开发此项目，以下是主要修改点：
-
-1. **修改模型架构**：在 train.py 中更改 YOLO 模型版本或替换为其他模型
-2. **调整超参数**：修改 train.py 中的训练参数以适应特定场景
-3. **添加新数据集**：扩展 convert_annotations.py 以支持新的数据集格式
-4. **增强预测功能**：在 predict.py 中添加后处理步骤或新的视觉效果
-
-## 依赖项
-
-- ultralytics>=8.0.0
-- torch>=1.7.0
-- opencv-python>=4.5.0
-- matplotlib
-- numpy
