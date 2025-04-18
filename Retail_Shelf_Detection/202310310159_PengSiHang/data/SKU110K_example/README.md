@@ -1,46 +1,77 @@
-# SKU110K 示例数据
+# SKU110K 示例数据集
 
-本目录包含 SKU110K 数据集的示例图像，用于展示零售货架商品检测系统的输入数据。
-
-## 数据集简介
-
-SKU110K 数据集是一个专门用于商品密集检测的大规模数据集，包含了约 11,000 张零售货架图像，标注了超过 170 万个商品边界框。该数据集的主要特点是商品排列密集、外观相似，是零售场景目标检测的重要数据集。
+本目录包含 SKU110K 数据集的精选示例样本，用于快速测试和演示零售货架商品检测系统。完整数据集可以从[SKU110K 官方仓库](https://github.com/eg4000/SKU110K_CVPR19)获取。
 
 ## 目录结构
 
 ```
 SKU110K_example/
-├── images/              # 图像文件目录
-│   ├── train/           # 训练集示例图像
-│   ├── val/             # 验证集示例图像
-│   └── test/            # 测试集示例图像
-└── annotations/         # 标注文件
+├── images/           # 示例图像文件
+│   ├── train/        # 训练集示例图像
+│   ├── val/          # 验证集示例图像
+│   └── test/         # 测试集示例图像
+├── annotations/      # 原始标注文件
+│   ├── train.csv     # 训练集标注
+│   ├── val.csv       # 验证集标注
+│   └── test.csv      # 测试集标注
+└── README.md         # 数据集说明文件
 ```
 
-## 示例说明
+## 数据集特点
 
-本目录中的示例图像是从完整 SKU110K 数据集中选取的代表性样本，保持了原始数据集的以下特征：
+SKU110K 是一个大规模的零售货架商品检测数据集，具有以下特点：
 
-1. **密集排列**：货架上的商品密集排列，边界框重叠严重
-2. **小目标**：单个商品在整个图像中所占比例较小
-3. **外观相似**：许多商品包装颜色和外形相似，增加识别难度
-4. **环境变化**：图像来自多个零售店，光照和视角各不相同
+- **密集目标分布**：平均每张图像包含约 147 个商品实例
+- **类内变化大**：同类商品在外观、尺寸和姿态上有较大变化
+- **遮挡和重叠**：商品之间存在大量重叠，增加检测难度
+- **真实场景**：数据来自真实零售环境，包括各种光照和视角变化
 
-## 数据来源
+## 标注格式
 
-完整的 SKU110K 数据集由以色列特拉维夫大学发布，原始数据集可从以下地址获取：
-[SKU110K Dataset](https://github.com/eg4000/SKU110K_CVPR19)
+示例数据集使用与原始 SKU110K 相同的标注格式：
+
+原始 CSV 文件格式（每行一个标注）：
 
 ```
-@inproceedings{goldman2019dense,
-  title={Precise Detection in Densely Packed Scenes},
-  author={Goldman, Eran and Herzig, Roei and Eisenschtat, Aviv and Goldberger, Jacob and Hassner, Tal},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-  pages={5227--5236},
-  year={2019}
-}
+image_name,x1,y1,x2,y2,class,image_width,image_height
+train_0.jpg,10,20,50,60,object,1000,800
+...
 ```
 
-## 使用说明
+各字段说明：
 
-这些示例图像仅用于演示目的。要使用完整数据集训练模型，请下载原始 SKU110K 数据集，并使用`convert_annotations.py`脚本转换为 YOLO 格式。
+- `image_name`: 图像文件名
+- `x1,y1`: 商品边界框左上角坐标
+- `x2,y2`: 商品边界框右下角坐标
+- `class`: 类别标签（所有商品均标为"object"）
+- `image_width,image_height`: 图像尺寸
+
+## 使用方法
+
+示例数据集主要用于以下用途：
+
+1. **快速测试系统功能**：不需下载完整数据集即可测试系统
+
+2. **演示检测效果**：展示系统在零售场景中的表现
+
+3. **调试模型参数**：快速迭代测试参数变化的影响
+
+### 转换为 YOLO 格式
+
+使用转换脚本将示例数据转换为 YOLO 训练格式：
+
+```bash
+python code/convert_annotations.py --source data/SKU110K_example --target data/SKU110K_example/yolo_format
+```
+
+### 使用示例数据进行预测
+
+```bash
+python code/main.py predict --source data/SKU110K_example/images/test/test_1.jpg --save
+```
+
+## 注意事项
+
+- 此示例数据集仅包含少量图像，不适合完整训练，仅用于测试和演示
+- 转换脚本会自动生成 YOLO 格式所需的 data.yaml 配置文件
+- 推荐使用预训练模型对示例数据进行推理，而不是从头训练
